@@ -1,0 +1,7 @@
+{
+  "_TODO": "Replace with the canonical KPI vocabulary for this tenant. The 'allowed' list is projected into the Function App's KPI_ALLOWLIST env var and enforced by HypothesisService.AllowedKpiNames. Schema: SentryIQ/docs/TENANT_CONTRACT.md (section: overlay/kpis.json).",
+  "allowed": [
+    "REPLACE_ME — KPI name exactly as it appears in vw_KPI_Trends"
+  ],
+  "default": "REPLACE_ME"
+}

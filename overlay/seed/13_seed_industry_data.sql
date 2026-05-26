@@ -1,0 +1,6 @@
+-- TODO: Replace this file with the tenant's reference data inserts.
+--
+-- Catalog rows, seed dimensions, lookup tables for the schema created in
+-- 12_create_industry_schema.sql. Use MERGE / IF NOT EXISTS for idempotency.
+--
+-- See SentryIQ/docs/TENANT_CONTRACT.md (section: overlay/seed/13_*).

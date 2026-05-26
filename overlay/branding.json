@@ -1,0 +1,15 @@
+{
+  "_TODO": "Replace this file with your tenant branding. Schema: SentryIQ/docs/TENANT_CONTRACT.md (section: overlay/branding.json).",
+  "id": "REPLACE_ME",
+  "displayName": "REPLACE_ME",
+  "longName": "REPLACE_ME",
+  "tagline": "REPLACE_ME",
+  "logoPath": "/assets/logo.png",
+  "palette": {
+    "primary": "#2563eb",
+    "accent": "#0ea5e9"
+  },
+  "suggestedPrompts": [
+    "REPLACE_ME with a typical question users in this industry might ask"
+  ]
+}

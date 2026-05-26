@@ -1,0 +1,9 @@
+{
+  "_TODO": "Replace with tenant-specific examples and enum values that get merged into the 6 shared OpenAPI specs in SentryIQ/core/openapi. The merger walks each spec looking for x-merged-from-overlay markers. Schema: SentryIQ/docs/TENANT_CONTRACT.md (section: overlay/openapi-overlays.json).",
+  "openapi.json": {},
+  "openapi-orchestrator.json": {},
+  "openapi-sql-agent.json": {},
+  "openapi-widget-agent.json": {},
+  "openapi-hypothesis-agent.json": {},
+  "openapi-hypothesis-manager.json": {}
+}

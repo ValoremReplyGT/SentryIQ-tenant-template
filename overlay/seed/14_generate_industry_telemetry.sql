@@ -1,0 +1,10 @@
+-- TODO: Replace this file with the tenant's synthetic event generator.
+--
+-- This is the per-industry analog of
+-- SentryIQ/core/sql/02_generate_daily_activity_data_v2.sql. It expresses
+-- the tenant's KPI math as a daily-activity loop, tuned to the industry:
+--   media       -> generates dwell_time + bounce + page_views
+--   gaming      -> generates session_length + DAU + revenue
+--   incentives  -> generates claim_amount + approval_rate
+--
+-- See SentryIQ/docs/TENANT_CONTRACT.md (section: overlay/seed/14_*).

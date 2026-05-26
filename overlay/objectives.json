@@ -1,0 +1,11 @@
+{
+  "_TODO": "Replace with the tenant's business objectives. Every objective's `kpi` must be a member of overlay/kpis.json's `allowed` list. Schema: SentryIQ/docs/TENANT_CONTRACT.md (section: overlay/objectives.json).",
+  "objectives": [
+    {
+      "id": "REPLACE_ME-objective-id",
+      "title": "REPLACE_ME — short objective title",
+      "description": "REPLACE_ME — one-paragraph description of what the objective means and how it is measured.",
+      "kpi": "REPLACE_ME — must match a KPI in overlay/kpis.json.allowed"
+    }
+  ]
+}

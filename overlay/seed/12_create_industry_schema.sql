@@ -1,0 +1,16 @@
+-- TODO: Replace this file with the tenant's industry-specific schema.
+--
+-- These tables layer on top of the shared bones created by
+-- SentryIQ/core/sql/0*-11d*.sql. Use IF NOT EXISTS / CREATE OR ALTER
+-- patterns so reruns are idempotent.
+--
+-- See SentryIQ/docs/TENANT_CONTRACT.md (section: overlay/seed/12_*) and
+-- MCI/scripts/12_create_mci_compliance_schema.sql for a real example.
+
+-- IF NOT EXISTS (SELECT 1 FROM sys.tables WHERE name = 'REPLACE_ME')
+-- BEGIN
+--   CREATE TABLE REPLACE_ME (
+--     id INT IDENTITY PRIMARY KEY,
+--     ...
+--   );
+-- END

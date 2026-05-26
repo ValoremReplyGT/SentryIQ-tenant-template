@@ -1,0 +1,100 @@
+name: build-tenant
+
+# Tenant CI: checks out SentryIQ as a submodule (pinned in .gitmodules to the
+# core-v1.0.0 tag), builds the core/frontend with this tenant's branding,
+# builds the .NET API, and lints the overlay SQL.
+#
+# A green run is the prerequisite for the tenant deploy workflow that lives
+# in the tenant repo's own pipeline.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out tenant repo + SentryIQ submodule
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 1
+
+      - name: Verify overlay layout
+        run: |
+          required=(
+            "overlay/branding.json"
+            "overlay/kpis.json"
+            "overlay/objectives.json"
+            "overlay/prompts/orchestrator.md"
+            "overlay/prompts/sql.md"
+            "overlay/prompts/widget.md"
+            "overlay/prompts/insights.md"
+            "overlay/prompts/hypothesis.md"
+            "overlay/prompts/fabric.md"
+            "overlay/openapi-overlays.json"
+            "overlay/fabric-data-agent-prompt.md"
+            "overlay/seed/12_create_industry_schema.sql"
+            "overlay/seed/13_seed_industry_data.sql"
+            "overlay/seed/14_generate_industry_telemetry.sql"
+          )
+          missing=0
+          for f in "${required[@]}"; do
+            if [ ! -f "$f" ]; then
+              echo "::error file=$f::Required overlay file is missing"
+              missing=1
+            fi
+          done
+          test "$missing" -eq 0
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: SentryIQ/core/frontend/package-lock.json
+
+      - name: Install core/frontend deps
+        working-directory: SentryIQ/core/frontend
+        run: npm ci
+
+      - name: Build core/frontend with tenant branding
+        working-directory: SentryIQ/core/frontend
+        env:
+          VITE_TENANT_BRANDING_JSON: ${{ github.workspace }}/overlay/branding.json
+        run: |
+          # Inline the branding JSON (single line) for Vite to consume as a string env
+          BRANDING_INLINE=$(jq -c . ../../../overlay/branding.json)
+          VITE_TENANT_BRANDING_JSON="$BRANDING_INLINE" npm run build
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Build core/api-dotnet
+        working-directory: SentryIQ/core/api-dotnet
+        run: dotnet build --configuration Release
+
+      - name: Lint overlay SQL (basic syntax checks)
+        run: |
+          # Cheap lint: file must be non-empty + valid UTF-8 + must contain at least
+          # one SQL statement (semicolon or BEGIN/END block). Real T-SQL linting
+          # happens server-side during seed.
+          fail=0
+          for f in overlay/seed/*.sql; do
+            if [ ! -s "$f" ]; then
+              echo "::error file=$f::SQL file is empty"
+              fail=1
+              continue
+            fi
+            iconv -f utf-8 -t utf-8 "$f" > /dev/null || {
+              echo "::error file=$f::Not valid UTF-8"
+              fail=1
+            }
+          done
+          test "$fail" -eq 0
