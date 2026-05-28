@@ -6,6 +6,11 @@ name: build-tenant
 #
 # A green run is the prerequisite for the tenant deploy workflow that lives
 # in the tenant repo's own pipeline.
+#
+# Submodule auth: the SentryIQ core repo is private. We mint a short-lived
+# installation token from the org-level "SentryIQ Tenant Submodule Reader"
+# GitHub App (read-only on Contents). App ID + private key are org-level
+# variable/secret, scoped to selected repos (this one + tenant-template).
 
 on:
   push:
@@ -18,11 +23,21 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - name: Mint SentryIQ submodule access token
+        id: app-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ vars.SENTRYIQ_SUBMODULE_APP_ID }}
+          private-key: ${{ secrets.SENTRYIQ_SUBMODULE_APP_KEY }}
+          owner: ValoremReplyGT
+          repositories: SentryIQ
+
       - name: Check out tenant repo + SentryIQ submodule
         uses: actions/checkout@v4
         with:
           submodules: recursive
           fetch-depth: 1
+          token: ${{ steps.app-token.outputs.token }}
 
       - name: Verify overlay layout
         run: |
