@@ -1,4 +1,4 @@
 [submodule "SentryIQ"]
 	path = SentryIQ
 	url = https://github.com/ValoremReplyGT/SentryIQ.git
-	branch = core-v1.0.0
+	branch = core-v1.0.1
